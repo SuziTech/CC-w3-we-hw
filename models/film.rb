@@ -1,5 +1,7 @@
 require_relative("../db/sql_runner")
 
+require('pry')
+
 class Film
   attr_reader :id
   attr_accessor :title, :price
@@ -62,8 +64,11 @@ class Film
     begin
       sql = "SELECT id FROM films WHERE title LIKE '%$1%'"
       values = [@title]
-      film_data = SqlRunner.run(sql, values)[0];
-      @id = film['id'].to_i
+      binding.pry
+      nil
+      film_id = SqlRunner.run(sql, values)
+      p film_id[0]['id']
+      return film_id[0]['id'].to_i
     rescue
       return 'No film of that title...'
     end
