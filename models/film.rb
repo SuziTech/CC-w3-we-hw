@@ -40,7 +40,7 @@ class Film
   def customers_for_film()
     sql = "SELECT name FROM customers
     INNER JOIN tickets ON customers.id = tickets.customer_id
-    WHERE film_id = $1"
+    WHERE film_id = $1 ORDER BY name"
     values = [@id]
     customer_data = SqlRunner.run(sql, values)
     return Customer.map_items(customer_data)
@@ -60,21 +60,18 @@ class Film
   #   return @price - combined_fees
   # end
 
-  def get_film_id_with_film_title()
-    begin
-      sql = "SELECT id FROM films WHERE title LIKE '%$1%'"
-      values = [@title]
-      binding.pry
-      nil
-      film_id = SqlRunner.run(sql, values)
-      p film_id[0]['id']
-      return film_id[0]['id'].to_i
-    rescue
-      return 'No film of that title...'
-    end
+  def Film.get_film_id_with_film_title(title_to_find)
+    # begin
+      sql = "SELECT id FROM films WHERE title LIKE '%#{title_to_find}%'"
+      film_arr = SqlRunner.run(sql)
+      # p film_arr[0]['id']
+      return film_arr[0]['id'].to_i
+    # rescue
+    #   return 'No film of that title...'
+    # end
   end
 
-  def Film.get_price_for_film()
+  def get_price_for_film()
     begin
       sql = "SELECT price FROM films WHERE id = $1"
       values = [@id]
@@ -83,8 +80,6 @@ class Film
     rescue
       return 'No price yet for that film...'
     end
-
-
 
   end
 
